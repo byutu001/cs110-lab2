@@ -24,7 +24,7 @@ body {
     font-size: 1.5em;
   }
   /* Button: NewGame and Reset */
-  .new_game, .reset {
+  .new_game, .reset, .ai_button, .two_players {
     text-align:center;
     background-color: #ff8c00;
     color: #000000;
@@ -35,7 +35,7 @@ body {
     display: block;
     margin: 20px auto;
   }
-  .new_game:hover, .reset {
+  .new_game:hover, .reset:hover, .ai_button:hover, .two_players:hover {
     background-color: orange;
   }
   .game_board {

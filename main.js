@@ -10,7 +10,9 @@ let TicTacToeBoard = [
 
 // Player's first move
 let firstMove = true; /* not case sensitive */
+let game_start = false;
 let game_going = true;
+var game_mode;              // Used to determine Play Mode. True will be 2P and False will be AI
 
 document.getElementsByClassName("display_player")[0].innerHTML = "X";
 document.getElementsByClassName("score_x")[0].innerHTML = 0;
@@ -48,8 +50,14 @@ new_game_button.addEventListener('click', newGameClick);
 let reset_button = document.getElementsByClassName("reset")[0];
 reset_button.addEventListener('click', resetClick);
 
+let twop_button = document.getElementsByClassName("two_players")[0];
+twop_button.addEventListener('click', twop_click);
+
+let ai_button = document.getElementsByClassName("ai_button")[0];
+ai_button.addEventListener('click', ai_click);
+
 function onBoxClick(event){
-    if(game_going){
+    if(game_going && game_start){
         var identifier = event.target.className;
         var which_span;
         switch(identifier){
@@ -95,8 +103,15 @@ function onBoxClick(event){
         span.innerHTML = (firstMove) ? "X" : "O";
         checkEnd();
 
-        firstMove = !firstMove;
-        document.getElementsByClassName("display_player")[0].innerHTML = (firstMove) ? "X" : "O";
+        if(!game_mode && game_going){
+            firstMove = false;
+            setTimeout(function() { AI_Move(); }, 1);
+            firstMove = true;
+        }
+        else{
+            firstMove = !firstMove;
+            document.getElementsByClassName("display_player")[0].innerHTML = (firstMove) ? "X" : "O";
+        }
     }
 }
 
@@ -129,17 +144,25 @@ function checkEnd(){
 */
 function winnerPlayer() {
         var won = false;
+        var player_indicator;
+        
         if (TicTacToeBoard[0][0] == "X" && TicTacToeBoard[1][1] == "X" && 
-            TicTacToeBoard [2][2] == "X" || TicTacToeBoard[0][0] == "O" && 
+            TicTacToeBoard [2][2] == "X"){
+                won = true; player_indicator = "X";
+        }
+        else if(TicTacToeBoard[0][0] == "O" && 
             TicTacToeBoard[1][1] == "O" && TicTacToeBoard [2][2] == "O") {
             // somebody won diagonally this way: \ 
-            won = true;
+            won = true; player_indicator = "Y";
             }
         else if (TicTacToeBoard[0][2] == "X" && TicTacToeBoard[1][1] == "X" && 
-            TicTacToeBoard [2][0] == "X" || TicTacToeBoard[0][2] == "O" && 
+            TicTacToeBoard [2][0] == "X"){
+                won = true; player_indicator = "X";
+            }
+        else if(TicTacToeBoard[0][2] == "O" && 
             TicTacToeBoard[1][1] == "O" && TicTacToeBoard [2][0] == "O") {
             // somebody won diagonally this way: /
-            won = true;
+            won = true; player_indicator = "Y";
             }
         else if (TicTacToeBoard[0][0] == "X" && TicTacToeBoard[0][1] == "X" &&
             TicTacToeBoard[0][2] == "X" || TicTacToeBoard[1][0] == "X" &&
@@ -147,7 +170,7 @@ function winnerPlayer() {
             TicTacToeBoard[2][0] == "X" && TicTacToeBoard[2][1] == "X" &&
             TicTacToeBoard[2][2] == "X") {
                 //someone won horizontally for X
-                won = true;
+                won = true; player_indicator = "X";
             }
         else if (TicTacToeBoard[0][0] == "O" && TicTacToeBoard[0][1] == "O" &&
             TicTacToeBoard[0][2] == "O" || TicTacToeBoard[1][0] == "O" &&
@@ -155,7 +178,7 @@ function winnerPlayer() {
             TicTacToeBoard[2][0] == "O" && TicTacToeBoard[2][1] == "O" &&
             TicTacToeBoard[2][2] == "O") {
                 //someone won horizontally for O
-                won = true;
+                won = true; player_indicator = "Y";
             }
         else if (TicTacToeBoard[0][0] == "X" && TicTacToeBoard[1][0] == "X" &&
             TicTacToeBoard[2][0] == "X" || TicTacToeBoard[0][1] == "X" &&
@@ -163,7 +186,7 @@ function winnerPlayer() {
             TicTacToeBoard[0][2] == "X" && TicTacToeBoard[1][2] == "X" &&
             TicTacToeBoard[2][2] == "X"){
                 //someone won vertically for X
-                won = true;
+                won = true; player_indicator = "X";
             }
         else if (TicTacToeBoard[0][0] == "O" && TicTacToeBoard[1][0] == "O" &&
             TicTacToeBoard[2][0] == "O" || TicTacToeBoard[0][1] == "O" &&
@@ -171,17 +194,15 @@ function winnerPlayer() {
             TicTacToeBoard[0][2] == "O" && TicTacToeBoard[1][2] == "O" &&
             TicTacToeBoard[2][2] == "O"){
                 //someone won vertically for X
-                won = true;
+                won = true; player_indicator = "X";
             }
 
             if(won){
-                var player_indicator;
-                if(firstMove){
-                    player_indicator = "X";
+                if(player_indicator == "X"){
                     ++scoreX;
                     document.getElementsByClassName("score_x")[0].innerHTML = scoreX;
                 }
-                else{
+                else if(player_indicator == "Y"){
                     player_indicator = "Y";
                     ++scoreY;
                     document.getElementsByClassName("score_y")[0].innerHTML = scoreY;
@@ -206,7 +227,37 @@ var placeXorO = true;
 }
 */
 
-
+function getSpanNumber(row, column){
+    switch(row){
+        case 0:
+            switch(column){
+                case 0:
+                    return 0;
+                case 1:
+                    return 3;
+                case 2:
+                    return 6; 
+            }
+        case 1:
+            switch(column){
+                case 0:
+                    return 1;
+                case 1:
+                    return 4;
+                case 2:
+                    return 7;
+            }
+        case 2:
+            switch(column){
+                case 0:
+                    return 2;
+                case 1:
+                    return 5;
+                case 2:
+                    return 8;
+            }
+    }
+}
 
 // implement New Game button here
 
@@ -235,7 +286,45 @@ function resetClick(){
     newGameClick();
     document.getElementsByClassName("score_x")[0].innerHTML = 0;
     document.getElementsByClassName("score_y")[0].innerHTML = 0;
+    document.getElementsByClassName("two_players")[0].style.backgroundColor = "";
+    document.getElementsByClassName("ai_button")[0].style.backgroundColor = "";
     
+}
+
+function twop_click(){
+    game_start = true;
+    game_mode = true;
+
+    document.getElementsByClassName("two_players")[0].style.backgroundColor = "green";
+    document.getElementsByClassName("ai_button")[0].style.backgroundColor = "";
+}
+
+function ai_click(){
+    game_start = true;
+    game_mode = false;
+
+    document.getElementsByClassName("ai_button")[0].style.backgroundColor = "green";
+    document.getElementsByClassName("two_players")[0].style.backgroundColor = "";
+}
+
+function AI_Move(){
+    document.getElementsByClassName("display_player")[0].innerHTML = "O";
+    let make_move = false;
+    
+    while(!make_move){
+        let row = Math.floor(Math.random() * 3);
+        let column = Math.floor(Math.random() * 3);
+
+        if(TicTacToeBoard[row][column] == ""){
+            let span = getSpanNumber(row, column);
+            document.getElementsByClassName("xo")[span].innerHTML = "O";
+            TicTacToeBoard[row][column] = "O";
+            make_move = true;
+            setTimeout(function () {checkEnd();}, 10);
+            document.getElementsByClassName("display_player")[0].innerHTML = "X";
+        }
+    }
+
 }
 
 
