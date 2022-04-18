@@ -13,6 +13,9 @@ let firstMove = true; /* not case sensitive */
 let game_start = false;
 let game_going = true;
 var game_mode;              // Used to determine Play Mode. True will be 2P and False will be AI
+var timer;
+var timeLeft;
+
 
 document.getElementsByClassName("display_player")[0].innerHTML = "X";
 document.getElementsByClassName("score_x")[0].innerHTML = 0;
@@ -58,6 +61,15 @@ ai_button.addEventListener('click', ai_click);
 
 function onBoxClick(event){
     if(game_going && game_start){
+        if(typeof(timer) === "undefined"){
+            timeLeft = 3;
+            countdown();
+        }
+        else{
+            clearTimeout(timer);
+            timeLeft = 3;
+            countdown();
+        }
         var identifier = event.target.className;
         var which_span;
         switch(identifier){
@@ -120,6 +132,26 @@ function onBoxClick(event){
     i.e. when all squares have either an X or an O
 */
 
+function countdown(){
+    if(game_going){
+        if(timeLeft){
+            document.getElementsByClassName("time")[0].innerHTML = "Time Left: " + timeLeft;
+            timeLeft--;
+            timer = setTimeout(countdown, 1000);
+        }
+        else{
+            document.getElementsByClassName("time")[0].innerHTML = "Turn Skipped!";
+            firstMove = !firstMove;
+            document.getElementsByClassName("display_player")[0].innerHTML = (firstMove) ? "X" : "O";
+            timeLeft = 3;
+            setTimeout(function() {countdown();} , 1000);
+            time = undefined;
+
+        }
+    }
+
+}
+
 function checkEnd(){
     if(!winnerPlayer()){
         for(let i = 0; i < 3; i++){
@@ -145,7 +177,7 @@ function checkEnd(){
 function winnerPlayer() {
         var won = false;
         var player_indicator;
-        
+
         if (TicTacToeBoard[0][0] == "X" && TicTacToeBoard[1][1] == "X" && 
             TicTacToeBoard [2][2] == "X"){
                 won = true; player_indicator = "X";
@@ -214,19 +246,6 @@ function winnerPlayer() {
             return won;
 }
 
-/* Simple AI that correctly places X or O in an empty box */
-var placeXorO = true;
-
-/*while (placeXorO) {
-    row = TicTacToeBoard[Math.floor(Math.random() * TicTacToeBoard.length)];
-    col = TicTacToeBoard[Math.floor(Math.random() * TicTacToeBoard[0].length)];
-
-    if(TicTacToeBoard[row][col] == " "){
-       placeXorO = false;
-    }
-}
-*/
-
 function getSpanNumber(row, column){
     switch(row){
         case 0:
@@ -270,6 +289,9 @@ function newGameClick(){
         }
     }
 
+    clearTimeout(timer);
+    document.getElementsByClassName("time")[0].innerHTML = "Time Left: 3";
+
     // Clear UI
 
     for(let i = 0; i < 9; i++){
@@ -284,6 +306,7 @@ function newGameClick(){
 
 function resetClick(){
     newGameClick();
+    game_start = false;
     document.getElementsByClassName("score_x")[0].innerHTML = 0;
     document.getElementsByClassName("score_y")[0].innerHTML = 0;
     document.getElementsByClassName("two_players")[0].style.backgroundColor = "";

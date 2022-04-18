@@ -23,6 +23,7 @@ body {
     text-align: center;
     font-size: 1.5em;
   }
+
   /* Button: NewGame and Reset */
   .new_game, .reset, .ai_button, .two_players {
     text-align:center;
@@ -65,4 +66,21 @@ body {
     position: absolute;
     width: 100%;
     text-align: center;
+  }
+  
+  .countdown {
+    margin-bottom: 5px;
+    text-align: center;
+  }
+
+  .countdown span.time, span.text {
+    padding: 12px;
+    display: inline-block;
+    font-family: verdana;
+    font-size: 16px;
+    line-height: 1.5;
+    font-weight: 900;
+    color: #fff;
+    background: #ff8c00;
+    border-radius: 10px;
   }
