@@ -11,12 +11,15 @@
     <title>Tic Tac Toe Game</title>
     
     <link rel="stylesheet" href="style.css" />
-    <script src="main.js"></script>
   </head>
   <body>
 
     <h1>Tic Tac Toe</h1>
+    <h2>Scores: X : <span class="score_x"></span> O: <span class="score_y"></span></h2>
     <h2>Its your turn, <span class="display_player"></span>.</h2>
+    <div class="countdown">
+      <span id="time" class="time">Time Left: 3</span>
+    </div>
 
     <div class="game_board">
       <div class='row'>
@@ -38,12 +41,15 @@
 
     <button class="new_game">New Game</button>
     <button class="reset">Reset</button>
+    <button class="two_players">2 Players</button>
+    <button class="ai_button">Play Against AI</button>
     <!-- Adding these two new buttons
 
       <button class="new_game">New Game</button>
       <button class="reset">Reset</button>
 
     -->
+    <script src="main.js"></script>
   </body>
 
 

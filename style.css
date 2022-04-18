@@ -14,14 +14,18 @@ body {
     text-align: center;
     font-size: 4em;
   }
+  h2{
+    text-align: center;
+  }
   .whose_turn {
     margin: 10px auto;
     margin-bottom: 20px;
     text-align: center;
     font-size: 1.5em;
   }
+
   /* Button: NewGame and Reset */
-  .new_game, .reset {
+  .new_game, .reset, .ai_button, .two_players {
     text-align:center;
     background-color: #ff8c00;
     color: #000000;
@@ -32,7 +36,7 @@ body {
     display: block;
     margin: 20px auto;
   }
-  .new_game:hover, .reset {
+  .new_game:hover, .reset:hover, .ai_button:hover, .two_players:hover {
     background-color: orange;
   }
   .game_board {
@@ -62,4 +66,21 @@ body {
     position: absolute;
     width: 100%;
     text-align: center;
+  }
+  
+  .countdown {
+    margin-bottom: 5px;
+    text-align: center;
+  }
+
+  .countdown span.time, span.text {
+    padding: 12px;
+    display: inline-block;
+    font-family: verdana;
+    font-size: 16px;
+    line-height: 1.5;
+    font-weight: 900;
+    color: #fff;
+    background: #ff8c00;
+    border-radius: 10px;
   }
